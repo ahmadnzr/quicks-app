@@ -14,6 +14,7 @@ export const myTheme: DefaultTheme = {
   color: {
     primary: {
       blue: "#2F80ED",
+      light: "#F2F2F2",
     },
   },
 };

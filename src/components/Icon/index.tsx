@@ -2,10 +2,12 @@ import React from "react";
 
 import FeatherIcon from "../../assets/icons/feather.svg?react";
 import ChattingIcon from "../../assets/icons/chatting.svg?react";
+import TabIcon from "../../assets/icons/tabs.svg?react";
 
-const listIcon = {
+export const listIcon = {
   feather: FeatherIcon,
-  chatting: ChattingIcon,
+  chat: ChattingIcon,
+  task: TabIcon,
 };
 
 interface Props extends React.SVGAttributes<SVGElement> {
