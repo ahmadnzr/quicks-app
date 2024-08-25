@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { FloatingButton } from "./components";
+import { FloatingButton, Modal } from "./components";
 import { useEffect, useRef, useState } from "react";
 
 type BtnName = "chat" | "task";
@@ -9,14 +9,16 @@ function App() {
   const btnMenuRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const btnMenuRefs: Record<
-    BtnName,
+    BtnName | "trigger",
     React.MutableRefObject<HTMLButtonElement | null>
   > = {
+    trigger: useRef<HTMLButtonElement | null>(null),
     chat: useRef<HTMLButtonElement | null>(null),
     task: useRef<HTMLButtonElement | null>(null),
   };
 
   const [activeBtn, setActiveBtn] = useState<BtnName | null>(null);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleClickTrigger = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -34,12 +36,13 @@ function App() {
     }
 
     triggerRef.current?.classList.add("active");
-
+    setOpenModal(true);
     setActiveBtn(btn);
   };
 
   const handleReset = () => {
     setActiveBtn(null);
+    setOpenModal(false);
     btnMenuRef.current?.classList.toggle("expanded");
     btnMenuRefs["chat"].current?.classList.remove("active");
     btnMenuRefs["task"].current?.classList.remove("active");
@@ -76,11 +79,14 @@ function App() {
 
         <TriggerButtonContainer ref={triggerRef} onClick={handleReset}>
           <FloatingButton
+            ref={btnMenuRefs.trigger}
             className="btn__trigger"
             icon={activeBtn || "feather"}
             onClick={handleClickTrigger}
           />
         </TriggerButtonContainer>
+
+        <Modal targetRef={btnMenuRefs.trigger} isOpen={openModal} />
       </FloatingButtonContainer>
     </main>
   );
