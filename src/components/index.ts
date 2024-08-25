@@ -3,3 +3,4 @@ export * from "./FloatingButton";
 export * from "./Modal";
 export * from "./SearchInput";
 export * from "./Profile";
+export * from "./Text";
