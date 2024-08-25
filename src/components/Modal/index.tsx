@@ -10,9 +10,10 @@ interface ModalPosition {
 interface Props {
   targetRef?: React.RefObject<HTMLElement>;
   isOpen?: boolean;
+  children?: React.ReactNode;
 }
 
-export const Modal = ({ targetRef, isOpen = false }: Props) => {
+export const Modal = ({ targetRef, isOpen = false, children }: Props) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<ModalPosition>({ top: 0, left: 0 });
   const [open, setOpen] = useState(isOpen);
@@ -62,7 +63,9 @@ export const Modal = ({ targetRef, isOpen = false }: Props) => {
 
   return ReactDOM.createPortal(
     open ? (
-      <ModalStyled ref={modalRef} $position={position}></ModalStyled>
+      <ModalStyled ref={modalRef} $position={position}>
+        {children}
+      </ModalStyled>
     ) : null,
     document.body,
   );
