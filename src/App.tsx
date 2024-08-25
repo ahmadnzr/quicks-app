@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { FloatingButton, Modal } from "./components";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 type BtnName = "chat" | "task";
 
@@ -49,10 +49,6 @@ function App() {
     triggerRef.current?.classList.remove("active");
   };
 
-  useEffect(() => {
-    console.log({ activeBtn });
-  }, [activeBtn]);
-
   return (
     <main>
       <FloatingButtonContainer>
@@ -63,7 +59,6 @@ function App() {
               className="btn__task"
               icon="task"
               btnType="secondary"
-              data-title="Task"
               onClick={() => handleClickBtnMenu("task")}
             />
             <FloatingButton
@@ -71,7 +66,6 @@ function App() {
               ref={btnMenuRefs.chat}
               icon="chat"
               btnType="secondary"
-              data-title="Inbox"
               onClick={() => handleClickBtnMenu("chat")}
             />
           </BtnMenu>
@@ -104,35 +98,26 @@ const HideContainer = styled.div`
   overflow: hidden;
   min-width: 0px;
   height: fit-content;
+  margin-right: -34px;
 `;
 
 const BtnMenu = styled.div`
   position: relative;
-  height: 100px;
-  margin-right: -150px;
+  margin-right: -124px;
+  border-radius: 68px;
   display: flex;
   align-items: center;
   gap: 26px;
   transition: 1s ease;
 
   &.expanded {
-    margin-right: 26px;
+    margin-right: 62px;
   }
 
   & .btn__task,
   & .btn__chat {
     position: relative;
     transition: 1s ease;
-  }
-
-  & .btn__task:before,
-  & .btn__chat:before {
-    position: absolute;
-    top: -24px;
-    left: 50%;
-    transform: translateX(-50%);
-    content: attr(data-title);
-    font-size: 12px;
   }
 
   & .btn__chat.active,
