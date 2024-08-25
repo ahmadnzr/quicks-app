@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { HTMLAttributes, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
@@ -7,13 +7,17 @@ interface ModalPosition {
   left: number;
 }
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   targetRef?: React.RefObject<HTMLElement>;
   isOpen?: boolean;
-  children?: React.ReactNode;
 }
 
-export const Modal = ({ targetRef, isOpen = false, children }: Props) => {
+export const Modal = ({
+  targetRef,
+  isOpen = false,
+  children,
+  ...others
+}: Props) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<ModalPosition>({ top: 0, left: 0 });
   const [open, setOpen] = useState(isOpen);
@@ -63,7 +67,7 @@ export const Modal = ({ targetRef, isOpen = false, children }: Props) => {
 
   return ReactDOM.createPortal(
     open ? (
-      <ModalStyled ref={modalRef} $position={position}>
+      <ModalStyled ref={modalRef} $position={position} {...others}>
         {children}
       </ModalStyled>
     ) : null,
@@ -78,6 +82,7 @@ const ModalStyled = styled.div.attrs<{ $position: ModalPosition }>((props) => ({
   },
 }))`
   position: absolute;
+  overflow: hidden;
   width: 734px;
   height: 737px;
   padding: 24px 32px;
