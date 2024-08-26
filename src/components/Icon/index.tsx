@@ -7,6 +7,7 @@ import SearchIcon from "../../assets/icons/search.svg?react";
 import UserIcon from "../../assets/icons/user.svg?react";
 import BackIcon from "../../assets/icons/back.svg?react";
 import CloseIcon from "../../assets/icons/close.svg?react";
+import MoreIcon from "../../assets/icons/more.svg?react";
 
 export const listIcon = {
   feather: FeatherIcon,
@@ -16,6 +17,7 @@ export const listIcon = {
   user: UserIcon,
   back: BackIcon,
   close: CloseIcon,
+  more: MoreIcon,
 };
 
 interface Props extends React.SVGAttributes<SVGElement> {
