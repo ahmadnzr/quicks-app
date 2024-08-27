@@ -5,12 +5,28 @@ import { Text } from "../Text";
 import { IconButton } from "../IconButton";
 
 import { Colors } from "../../helpers/utils";
+import { MenuType } from "../ActionMenuButton";
 
 interface Props {
   onBack: () => void;
 }
 
 export const ChatDetail = ({ onBack }: Props) => {
+  const menus: MenuType<{ chatId: 10; username: string }>[] = [
+    {
+      key: 0,
+      label: "Edit",
+      color: "#2f80ed",
+      data: { chatId: 10, username: "nizar" },
+    },
+    {
+      key: 1,
+      label: "Delete",
+      color: "#eb5757",
+      data: { chatId: 10, username: "andika" },
+    },
+  ];
+
   return (
     <React.Fragment>
       <ChatHeader>
@@ -29,7 +45,17 @@ export const ChatDetail = ({ onBack }: Props) => {
             You
           </Text>
           <ChatCard $isUser>
-            <IconButton icon="more" size="md" />
+            <IconButton
+              icon="more"
+              size="md"
+              withMenu
+              actionMenuProp={{
+                menus,
+                onClickMenu: (menu) => {
+                  console.warn(menu.data?.chatId);
+                },
+              }}
+            />
             <ChatText $bg="#EEDCFF">
               <Text size="md">
                 No worries. It will be completed ASAP. I've asked him yesterday.
@@ -144,7 +170,7 @@ const Participant = styled.div`
 `;
 
 const ChatContent = styled.div`
-  margin-right: -13px;
+  margin-right: -26px;
   padding-right: 13px;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -226,6 +252,7 @@ const Input = styled.input`
   border-radius: 5px;
   outline: none;
 `;
+
 const Button = styled.button`
   padding: 8px 16px;
 
