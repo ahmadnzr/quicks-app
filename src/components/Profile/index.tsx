@@ -1,20 +1,21 @@
-import React, { HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 import styled from "styled-components";
 import { Icon } from "../Icon";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   primary?: boolean;
+  initial?: string;
 }
 
-export const Profile = ({ primary = true, ...props }: Props) => {
+export const Profile = ({ primary = true, initial, ...props }: Props) => {
   return (
-    <ProfileStyled $primary={primary} {...props}>
-      <Icon name="user" className="profile_icon" />
+    <ProfileStyled $primary={primary} $initial={initial} {...props}>
+      {!initial ? <Icon name="user" className="profile_icon" /> : null}
     </ProfileStyled>
   );
 };
 
-const ProfileStyled = styled.div<{ $primary: boolean }>`
+const ProfileStyled = styled.div<{ $primary: boolean; $initial?: string }>`
   --size: 34px;
   --icon-size: 18px;
   --bg: ${(props) => (props.$primary ? "#2F80ED" : "#E0E0E0")};
@@ -31,6 +32,13 @@ const ProfileStyled = styled.div<{ $primary: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:before {
+    display: ${(props) => (props.$initial ? "block" : "none")};
+    content: "${(props) => props.$initial}";
+    color: #fff;
+    font-weight: 700;
+  }
 
   & .profile_icon {
     width: var(--icon-size);

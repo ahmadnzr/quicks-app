@@ -10,11 +10,18 @@ type ModalType = Required<
 
 export const ChatModal = ({ targetRef, isOpen }: ModalType) => {
   const [step, setStep] = useState<"list" | "detail">("detail");
+  const [chatId, setChatId] = useState<number | undefined>(undefined);
+
+  const handleClikChat = (chatId: number) => {
+    setChatId(chatId);
+    setStep("detail");
+  };
 
   const content: Record<typeof step, React.ReactNode> = {
-    list: <ChatList onClick={() => setStep("detail")} />,
+    list: <ChatList onClick={handleClikChat} />,
     detail: (
       <ChatDetail
+        chatId={chatId}
         onBack={() => {
           setStep("list");
         }}

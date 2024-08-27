@@ -1,8 +1,9 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 import LoadingIcon from "../../assets/loading.png";
 
 import { Text } from "../Text";
+import { Rotate } from "../Styled";
 
 interface Props {
   className?: string;
@@ -20,15 +21,6 @@ export const Info = ({ isLoading, className, children }: Props) => {
     </InfoStyled>
   );
 };
-
-const Rotate = keyframes`
-  from{
-    transform: rotate(0deg)
-  }
-  to{
-    transform: rotate(360deg)
-  }
-`;
 
 const InfoStyled = styled.div<{ $bg: string }>`
   padding: 10px;
