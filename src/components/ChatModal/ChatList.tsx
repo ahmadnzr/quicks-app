@@ -1,118 +1,86 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useCallback, useEffect, useState } from "react";
+import styled, { css } from "styled-components";
+
+import LoadingIcon2 from "../../assets/loading2.png";
 
 import { SearchInput } from "../SearchInput";
 import { Profile } from "../Profile";
 import { Text } from "../Text";
+import { Rotate } from "../Styled";
 
 import { Colors } from "../../helpers/utils";
+import { PreviewChatListType } from "../../helpers/types";
+import { getListPreviewChat } from "../../helpers/api";
 
 interface Props {
-  onClick: () => void;
+  onClick: (chatId: number) => void;
 }
+
 export const ChatList = ({ onClick }: Props) => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<PreviewChatListType[] | []>([]);
+
+  const getData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getListPreviewChat();
+      setData(data);
+    } catch (err) {
+      console.warn(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <React.Fragment>
       <ChatHeader>
         <SearchInput />
       </ChatHeader>
       <ChatContent>
-        <ChatCard className="new-chat" onClick={onClick}>
-          <ProfileContainer>
-            <Profile className="profile" primary={false} />
-            <Profile className="profile" />
-          </ProfileContainer>
-          <DetailChat>
-            <ChatMeta>
-              <Text
-                size="lg"
-                weight="bold"
-                color={Colors.primary.blue}
-                className="detail-chat_users"
+        {!loading ? (
+          <>
+            {data.map((item) => (
+              <ChatCard
+                key={item?.id}
+                onClick={() => onClick(item.id)}
+                $isNewChat={Boolean(item?.newChat)}
+                $borderBottom={!item.isSupport}
               >
-                109220-Naturalization
-              </Text>
-              <Text>01/01/2021 19:15</Text>
-            </ChatMeta>
-            <LastChat>
-              <Text weight="bold">Cameron Philips :</Text>
-              <Text size="sm">Please check this out!</Text>
-            </LastChat>
-          </DetailChat>
-        </ChatCard>
-        <ChatCard>
-          <ProfileContainer>
-            <Profile className="profile" primary={false} />
-            <Profile className="profile" />
-          </ProfileContainer>
-          <DetailChat>
-            <ChatMeta>
-              <Text
-                size="lg"
-                weight="bold"
-                color={Colors.primary.blue}
-                className="detail-chat_users"
-              >
-                Jeannette Moraime Chamba (Hutto I-589) [Hutto Follow Up - Brief
-                Service]
-              </Text>
-              <Text>02/06/2021 10:45</Text>
-            </ChatMeta>
-            <LastChat>
-              <Text weight="bold">Ellen :</Text>
-              <Text size="sm">Hey, please read.</Text>
-            </LastChat>
-          </DetailChat>
-        </ChatCard>
-        <ChatCard>
-          <ProfileContainer>
-            <Profile className="profile" primary={false} />
-            <Profile className="profile" />
-          </ProfileContainer>
-          <DetailChat>
-            <ChatMeta>
-              <Text
-                size="lg"
-                weight="bold"
-                color={Colors.primary.blue}
-                className="detail-chat_users"
-              >
-                8405-Diana SALAZAR MUNGUNIA
-              </Text>
-              <Text>01/06/2021</Text>
-            </ChatMeta>
-            <LastChat>
-              <Text weight="bold">Cameron Philips :</Text>
-              <Text size="sm" className="lastchat_preview">
-                I understand your initial concerns and thats very valid,
-                Elizabeth. But you can call me
-              </Text>
-            </LastChat>
-          </DetailChat>
-        </ChatCard>
-        <ChatCard $borderBottom={false}>
-          <ProfileContainer>
-            <Profile className="profile" initial="F" />
-          </ProfileContainer>
-          <DetailChat>
-            <ChatMeta>
-              <Text
-                size="lg"
-                weight="bold"
-                color={Colors.primary.blue}
-                className="detail-chat_users"
-              >
-                FastVisa Support
-              </Text>
-              <Text>01/06/2021</Text>
-            </ChatMeta>
-            <LastChat>
-              <Text size="sm" className="lastchat_preview">
-                Hey there!, Welcome to your inbox.
-              </Text>
-            </LastChat>
-          </DetailChat>
-        </ChatCard>
+                <ProfileContainer>
+                  <Profile className="profile" primary={false} />
+                  <Profile className="profile" />
+                </ProfileContainer>
+                <DetailChat>
+                  <ChatMeta>
+                    <Text
+                      size="lg"
+                      weight="bold"
+                      color={Colors.primary.blue}
+                      className="detail-chat_users"
+                    >
+                      {item?.title}
+                    </Text>
+                    <Text>{item?.date}</Text>
+                  </ChatMeta>
+                  <LastChat>
+                    <Text weight="bold">{item?.lastChat.sender}</Text>
+                    <Text size="sm">{item?.lastChat.message}</Text>
+                  </LastChat>
+                </DetailChat>
+              </ChatCard>
+            ))}
+          </>
+        ) : (
+          <LoadingContainer>
+            <img src={LoadingIcon2} alt="" className="loading" />
+            <Text weight="bold">Loading Chats...</Text>
+          </LoadingContainer>
+        )}
       </ChatContent>
     </React.Fragment>
   );
@@ -125,9 +93,10 @@ const ChatContent = styled.div`
   overflow-y: auto;
   margin-right: -13px;
   padding-right: 13px;
+  position: relative;
 `;
 
-const ChatCard = styled.div<{ $borderBottom?: boolean }>`
+const ChatCard = styled.div<{ $borderBottom?: boolean; $isNewChat?: boolean }>`
   position: relative;
   padding: 22px 0;
   border-bottom: ${({ $borderBottom = true }) =>
@@ -135,16 +104,21 @@ const ChatCard = styled.div<{ $borderBottom?: boolean }>`
   display: flex;
   gap: 17px;
 
-  &.new-chat:after {
-    position: absolute;
-    right: 27px;
-    bottom: 38.5px;
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-    background: red;
-  }
+  ${(props) =>
+    props.$isNewChat
+      ? css`
+          &:after {
+            position: absolute;
+            right: 27px;
+            bottom: 38.5px;
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 10px;
+            background: red;
+          }
+        `
+      : css``}
 `;
 
 const ProfileContainer = styled.div`
@@ -184,5 +158,16 @@ const LastChat = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+`;
+
+const LoadingContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  & .loading {
+    animation: ${Rotate} 0.3s ease infinite;
   }
 `;

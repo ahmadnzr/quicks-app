@@ -1,32 +1,93 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { Text } from "../Text";
 import { IconButton } from "../IconButton";
 import { MenuType } from "../ActionMenuButton";
 import { Info } from "../Info";
+import { Tag } from "../Tag";
 
 import { Colors } from "../../helpers/utils";
+import { DetailChatListType } from "../../helpers/types";
+import { getDetailChat } from "../../helpers/api";
+
+const menus: MenuType<{ chatId: 10; username: string }>[] = [
+  {
+    key: 0,
+    label: "Edit",
+    color: "#2f80ed",
+    data: { chatId: 10, username: "nizar" },
+  },
+  {
+    key: 1,
+    label: "Delete",
+    color: "#eb5757",
+    data: { chatId: 10, username: "andika" },
+  },
+];
 
 interface Props {
   onBack: () => void;
+  chatId?: number;
 }
 
-export const ChatDetail = ({ onBack }: Props) => {
-  const menus: MenuType<{ chatId: 10; username: string }>[] = [
-    {
-      key: 0,
-      label: "Edit",
-      color: "#2f80ed",
-      data: { chatId: 10, username: "nizar" },
-    },
-    {
-      key: 1,
-      label: "Delete",
-      color: "#eb5757",
-      data: { chatId: 10, username: "andika" },
-    },
-  ];
+export const ChatDetail = ({ onBack, chatId }: Props) => {
+  const tagRef = useRef<HTMLDivElement>(null);
+  const chatContentRef = useRef<HTMLDivElement>(null);
+  const [data, setData] = useState<DetailChatListType | undefined>();
+  const [loadInfo, setLoadInfo] = useState(false);
+
+  const getData = useCallback(async (chatId: number) => {
+    try {
+      const data = await getDetailChat(chatId);
+      setData(data);
+    } catch (err) {
+      console.warn(err);
+    }
+  }, []);
+
+  const handleScroll = () => {
+    if (chatContentRef.current && tagRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatContentRef.current;
+
+      if (scrollTop + clientHeight >= scrollHeight - 100) {
+        tagRef.current.classList.add("hide");
+      } else {
+        tagRef.current.classList.remove("hide");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (chatId) {
+      getData(chatId);
+    }
+  }, [chatId]);
+
+  useEffect(() => {
+    if (chatContentRef.current && tagRef.current) {
+      const { scrollHeight, clientHeight } = chatContentRef.current;
+      if (clientHeight + 100 > scrollHeight) {
+        tagRef.current.classList.add("hide");
+      } else {
+        tagRef.current.classList.remove("hide");
+      }
+    }
+  }, [chatContentRef.current, tagRef.current]);
+
+  useEffect(() => {
+    if (data?.isSupport) {
+      setLoadInfo(true);
+    } else {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setLoadInfo(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [data?.isSupport]);
 
   return (
     <React.Fragment>
@@ -34,116 +95,65 @@ export const ChatDetail = ({ onBack }: Props) => {
         <IconButton icon="back" onClick={onBack} />
         <Participant>
           <Text size="lg" weight="bold" color={Colors.primary.blue}>
-            I-589 AMARKHIL, Obaidullah [Affirmative Filing with ZHN]
+            {data?.title}
           </Text>
-          <Text size="sm">3 Participants</Text>
+          {data?.numberParticipant ? (
+            <Text size="sm">{data.numberParticipant} Participants</Text>
+          ) : null}
         </Participant>
         <IconButton icon="close" size="sm" />
       </ChatHeader>
-      <ChatContent>
-        {/*
-        <Tag className="chat_tag" color="blue">
-          New Message
-        </Tag>
-        */}
-        <ChatItem $isUser>
-          <Text size="md" color="#9B51E0" weight="bold">
-            You
-          </Text>
-          <ChatCard $isUser>
-            <IconButton
-              icon="more"
-              size="md"
-              withMenu
-              actionMenuProp={{
-                menus,
-                onClickMenu: (menu) => {
-                  console.warn(menu.data?.chatId);
-                },
-              }}
-            />
-            <ChatText $bg="#EEDCFF">
-              <Text size="md">
-                No worries. It will be completed ASAP. I've asked him yesterday.
-              </Text>
-              <Text className="chat-text_time" size="sm">
-                19:32
-              </Text>
-            </ChatText>
-          </ChatCard>
-        </ChatItem>
-        <Divider data-label="Today June 09, 2021" />
-        <ChatItem $isUser={false}>
-          <Text size="md" color="#E5A443" weight="bold">
-            Mary Hilda
-          </Text>
-          <ChatCard $isUser={false}>
-            <IconButton icon="more" size="md" />
-            <ChatText $bg="#FCEED3">
-              <Text size="md">
-                Hello Obaidullah, I will be your case advisor for case #029290.
-                I have assigned some homework for you to fill. Please keep up
-                with the due dates. Should you have any questions, you can
-                message me anytime. Thanks.
-              </Text>
-              <Text className="chat-text_time" size="sm">
-                19:32
-              </Text>
-            </ChatText>
-          </ChatCard>
-        </ChatItem>
-        <ChatItem $isUser>
-          <Text size="md" color="#9B51E0" weight="bold">
-            You
-          </Text>
-          <ChatCard $isUser>
-            <IconButton icon="more" size="md" />
-            <ChatText $bg="#EEDCFF">
-              <Text size="md">
-                Please contact Mary for questions regarding the case bcs she
-                will be managing your forms from now on! Thanks Mary.
-              </Text>
-              <Text className="chat-text_time" size="sm">
-                19:32
-              </Text>
-            </ChatText>
-          </ChatCard>
-        </ChatItem>
-        <ChatItem $isUser={false}>
-          <Text size="md" color="#E5A443" weight="bold">
-            Mary Hilda
-          </Text>
-          <ChatCard $isUser={false}>
-            <IconButton icon="more" size="md" />
-            <ChatText $bg="#FCEED3">
-              <Text size="md">Sure thing. Claren</Text>
-              <Text className="chat-text_time" size="sm">
-                19:32
-              </Text>
-            </ChatText>
-          </ChatCard>
-        </ChatItem>
-        <Divider data-label="New Message" $color="#EB5757" />
-        <ChatItem $isUser={false}>
-          <Text size="md" color="#43B78D" weight="bold">
-            Obaidullah Amarkhil
-          </Text>
-          <ChatCard $isUser={false}>
-            <IconButton icon="more" size="md" />
-            <ChatText $bg="#D2F2EA">
-              <Text size="md">Morning. I’ll try to do them. Thanks</Text>
-              <Text className="chat-text_time" size="sm">
-                19:32
-              </Text>
-            </ChatText>
-          </ChatCard>
-        </ChatItem>
-
-        <Info isLoading>
-          Please wait while we connect you with one of our team ...
-        </Info>
+      <ChatContent ref={chatContentRef} onScroll={handleScroll}>
+        {data?.chats.map((item, i) => {
+          return (
+            <React.Fragment key={i}>
+              {i !== 0 ? (
+                <Divider
+                  key={i}
+                  data-label={item.date}
+                  $color={item.isNew ? Colors.primary.red : undefined}
+                />
+              ) : null}
+              {item.chat.map((chat, i) => (
+                <ChatItem key={i} $isUser={chat.isUser}>
+                  <Text size="md" color={chat.color} weight="bold">
+                    {chat.sender}
+                  </Text>
+                  <ChatCard $isUser={chat.isUser}>
+                    <IconButton
+                      icon="more"
+                      size="md"
+                      withMenu
+                      actionMenuProp={{
+                        menus,
+                        onClickMenu: (menu) => {
+                          console.warn(menu.data?.chatId);
+                        },
+                      }}
+                    />
+                    <ChatText $bg={chat.background}>
+                      <Text size="md">{chat.message}</Text>
+                      <Text className="chat-text_time" size="sm">
+                        {chat.time}
+                      </Text>
+                    </ChatText>
+                  </ChatCard>
+                </ChatItem>
+              ))}
+            </React.Fragment>
+          );
+        })}
       </ChatContent>
       <ChatFooter>
+        <Tag ref={tagRef} className="chat_tag" color="blue">
+          New Message
+        </Tag>
+        {loadInfo ? (
+          <Info isLoading className="chat_info">
+            Please wait while we connect you with one of our team ...
+          </Info>
+        ) : null}
+
         <Input placeholder="Type a new message" />
         <Button>
           <Text size="lg" weight="bold" color="#fff">
@@ -174,7 +184,7 @@ const Participant = styled.div`
     line-height: 100%;
   }
 
-  & :first-child {
+  & :first-child:not(:last-child) {
     margin-bottom: 9.36px;
   }
 `;
@@ -189,13 +199,6 @@ const ChatContent = styled.div`
 
   flex: 1;
   overflow-y: auto;
-
-  & .chat_tag {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
 `;
 
 const ChatItem = styled.div<{ $isUser: boolean }>`
@@ -258,9 +261,30 @@ const Divider = styled.div<{ $color?: string }>`
 
 const ChatFooter = styled.div`
   height: 40px;
+  position: relative;
 
   display: flex;
   gap: 13px;
+
+  & .chat_tag {
+    z-index: 999;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  & .chat_tag.hide {
+    display: none;
+  }
+
+  & .chat_info {
+    z-index: 999;
+    position: absolute;
+    top: -70px;
+    left: 0;
+    right: 0;
+  }
 `;
 const Input = styled.input`
   padding: 10px 16px;
