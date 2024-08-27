@@ -40,52 +40,6 @@ export const ChatList = ({ onClick }: Props) => {
             </LastChat>
           </DetailChat>
         </ChatCard>
-        <ChatCard className="new-chat">
-          <ProfileContainer>
-            <Profile className="profile" primary={false} />
-            <Profile className="profile" />
-          </ProfileContainer>
-          <DetailChat>
-            <ChatMeta>
-              <Text
-                size="lg"
-                weight="bold"
-                color={Colors.primary.blue}
-                className="detail-chat_users"
-              >
-                109220-Naturalization
-              </Text>
-              <Text>01/01/2021 19:15</Text>
-            </ChatMeta>
-            <LastChat>
-              <Text weight="bold">Cameron Philips :</Text>
-              <Text size="sm">Please check this out!</Text>
-            </LastChat>
-          </DetailChat>
-        </ChatCard>
-        <ChatCard className="new-chat">
-          <ProfileContainer>
-            <Profile className="profile" primary={false} />
-            <Profile className="profile" />
-          </ProfileContainer>
-          <DetailChat>
-            <ChatMeta>
-              <Text
-                size="lg"
-                weight="bold"
-                color={Colors.primary.blue}
-                className="detail-chat_users"
-              >
-                109220-Naturalization
-              </Text>
-              <Text>01/01/2021 19:15</Text>
-            </ChatMeta>
-            <LastChat>
-              <Text weight="bold">Cameron Philips :</Text>
-              <Text size="sm">Please check this out!</Text>
-            </LastChat>
-          </DetailChat>
-        </ChatCard>
         <ChatCard>
           <ProfileContainer>
             <Profile className="profile" primary={false} />
@@ -136,6 +90,29 @@ export const ChatList = ({ onClick }: Props) => {
             </LastChat>
           </DetailChat>
         </ChatCard>
+        <ChatCard $borderBottom={false}>
+          <ProfileContainer>
+            <Profile className="profile" initial="F" />
+          </ProfileContainer>
+          <DetailChat>
+            <ChatMeta>
+              <Text
+                size="lg"
+                weight="bold"
+                color={Colors.primary.blue}
+                className="detail-chat_users"
+              >
+                FastVisa Support
+              </Text>
+              <Text>01/06/2021</Text>
+            </ChatMeta>
+            <LastChat>
+              <Text size="sm" className="lastchat_preview">
+                Hey there!, Welcome to your inbox.
+              </Text>
+            </LastChat>
+          </DetailChat>
+        </ChatCard>
       </ChatContent>
     </React.Fragment>
   );
@@ -150,10 +127,11 @@ const ChatContent = styled.div`
   padding-right: 13px;
 `;
 
-const ChatCard = styled.div`
+const ChatCard = styled.div<{ $borderBottom?: boolean }>`
   position: relative;
   padding: 22px 0;
-  border-bottom: 1px solid #828282;
+  border-bottom: ${({ $borderBottom = true }) =>
+    $borderBottom ? "1px solid #828282" : "none"};
   display: flex;
   gap: 17px;
 
@@ -179,6 +157,11 @@ const ProfileContainer = styled.div`
 
   & :nth-child(2) {
     left: 17px;
+  }
+
+  & .profile:only-child {
+    left: 50%;
+    transform: translateX(-50%);
   }
 `;
 
