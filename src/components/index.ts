@@ -7,3 +7,4 @@ export * from "./Text";
 export * from "./ChatModal";
 export * from "./IconButton";
 export * from "./ActionMenuButton";
+export * from "./Tag";

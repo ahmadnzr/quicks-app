@@ -6,6 +6,7 @@ import { IconButton } from "../IconButton";
 
 import { Colors } from "../../helpers/utils";
 import { MenuType } from "../ActionMenuButton";
+import { Tag } from "../Tag";
 
 interface Props {
   onBack: () => void;
@@ -40,6 +41,9 @@ export const ChatDetail = ({ onBack }: Props) => {
         <IconButton icon="close" size="sm" />
       </ChatHeader>
       <ChatContent>
+        <Tag className="chat_tag" color="blue">
+          New Message
+        </Tag>
         <ChatItem $isUser>
           <Text size="md" color="#9B51E0" weight="bold">
             You
@@ -175,8 +179,17 @@ const ChatContent = styled.div`
   padding-top: 12px;
   padding-bottom: 12px;
 
+  position: relative;
+
   flex: 1;
   overflow-y: auto;
+
+  & .chat_tag {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 `;
 
 const ChatItem = styled.div<{ $isUser: boolean }>`

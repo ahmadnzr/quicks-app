@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
-import { FloatingButton, ChatModal, ActionMenuButton } from "./components";
+import { FloatingButton, ChatModal } from "./components";
 
 type BtnName = "chat" | "task";
 
@@ -51,7 +51,6 @@ function App() {
 
   return (
     <main>
-      <ActionMenuButton />
       <FloatingButtonContainer>
         <HideContainer>
           <BtnMenu ref={btnMenuRef}>
