@@ -3,10 +3,10 @@ import styled, { css } from "styled-components";
 
 import { Text } from "../Text";
 import { IconButton } from "../IconButton";
+import { MenuType } from "../ActionMenuButton";
+import { Info } from "../Info";
 
 import { Colors } from "../../helpers/utils";
-import { MenuType } from "../ActionMenuButton";
-import { Tag } from "../Tag";
 
 interface Props {
   onBack: () => void;
@@ -41,9 +41,11 @@ export const ChatDetail = ({ onBack }: Props) => {
         <IconButton icon="close" size="sm" />
       </ChatHeader>
       <ChatContent>
+        {/*
         <Tag className="chat_tag" color="blue">
           New Message
         </Tag>
+        */}
         <ChatItem $isUser>
           <Text size="md" color="#9B51E0" weight="bold">
             You
@@ -136,6 +138,10 @@ export const ChatDetail = ({ onBack }: Props) => {
             </ChatText>
           </ChatCard>
         </ChatItem>
+
+        <Info isLoading>
+          Please wait while we connect you with one of our team ...
+        </Info>
       </ChatContent>
       <ChatFooter>
         <Input placeholder="Type a new message" />
