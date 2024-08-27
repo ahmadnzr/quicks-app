@@ -3,6 +3,8 @@ import styled, { css } from "styled-components";
 
 import { Text } from "../Text";
 import { IconButton } from "../IconButton";
+import { MenuType } from "../ActionMenuButton";
+import { Info } from "../Info";
 
 import { Colors } from "../../helpers/utils";
 
@@ -11,6 +13,21 @@ interface Props {
 }
 
 export const ChatDetail = ({ onBack }: Props) => {
+  const menus: MenuType<{ chatId: 10; username: string }>[] = [
+    {
+      key: 0,
+      label: "Edit",
+      color: "#2f80ed",
+      data: { chatId: 10, username: "nizar" },
+    },
+    {
+      key: 1,
+      label: "Delete",
+      color: "#eb5757",
+      data: { chatId: 10, username: "andika" },
+    },
+  ];
+
   return (
     <React.Fragment>
       <ChatHeader>
@@ -24,12 +41,27 @@ export const ChatDetail = ({ onBack }: Props) => {
         <IconButton icon="close" size="sm" />
       </ChatHeader>
       <ChatContent>
+        {/*
+        <Tag className="chat_tag" color="blue">
+          New Message
+        </Tag>
+        */}
         <ChatItem $isUser>
           <Text size="md" color="#9B51E0" weight="bold">
             You
           </Text>
           <ChatCard $isUser>
-            <IconButton icon="more" size="md" />
+            <IconButton
+              icon="more"
+              size="md"
+              withMenu
+              actionMenuProp={{
+                menus,
+                onClickMenu: (menu) => {
+                  console.warn(menu.data?.chatId);
+                },
+              }}
+            />
             <ChatText $bg="#EEDCFF">
               <Text size="md">
                 No worries. It will be completed ASAP. I've asked him yesterday.
@@ -106,6 +138,10 @@ export const ChatDetail = ({ onBack }: Props) => {
             </ChatText>
           </ChatCard>
         </ChatItem>
+
+        <Info isLoading>
+          Please wait while we connect you with one of our team ...
+        </Info>
       </ChatContent>
       <ChatFooter>
         <Input placeholder="Type a new message" />
@@ -144,13 +180,22 @@ const Participant = styled.div`
 `;
 
 const ChatContent = styled.div`
-  margin-right: -13px;
+  margin-right: -26px;
   padding-right: 13px;
   padding-top: 12px;
   padding-bottom: 12px;
 
+  position: relative;
+
   flex: 1;
   overflow-y: auto;
+
+  & .chat_tag {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 `;
 
 const ChatItem = styled.div<{ $isUser: boolean }>`
@@ -226,6 +271,7 @@ const Input = styled.input`
   border-radius: 5px;
   outline: none;
 `;
+
 const Button = styled.button`
   padding: 8px 16px;
 

@@ -6,3 +6,6 @@ export * from "./Profile";
 export * from "./Text";
 export * from "./ChatModal";
 export * from "./IconButton";
+export * from "./ActionMenuButton";
+export * from "./Tag";
+export * from "./Info";
