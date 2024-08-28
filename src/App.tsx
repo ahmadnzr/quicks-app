@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
-import { FloatingButton, ChatModal } from "./components";
+import { FloatingButton, ChatModal, TaskModal } from "./components";
 
 type BtnName = "chat" | "task";
 
@@ -18,7 +18,6 @@ function App() {
   };
 
   const [activeBtn, setActiveBtn] = useState<BtnName | null>(null);
-  const [openModal, setOpenModal] = useState(false);
 
   const handleClickTrigger = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -36,13 +35,11 @@ function App() {
     }
 
     triggerRef.current?.classList.add("active");
-    setOpenModal(true);
     setActiveBtn(btn);
   };
 
   const handleReset = () => {
     setActiveBtn(null);
-    setOpenModal(false);
     btnMenuRef.current?.classList.toggle("expanded");
     btnMenuRefs["chat"].current?.classList.remove("active");
     btnMenuRefs["task"].current?.classList.remove("active");
@@ -80,7 +77,14 @@ function App() {
           />
         </TriggerButtonContainer>
 
-        <ChatModal targetRef={btnMenuRefs.trigger} isOpen={openModal} />
+        <ChatModal
+          targetRef={btnMenuRefs.trigger}
+          isOpen={activeBtn === "chat"}
+        />
+        <TaskModal
+          targetRef={btnMenuRefs.trigger}
+          isOpen={activeBtn === "task"}
+        />
       </FloatingButtonContainer>
     </main>
   );

@@ -10,3 +10,4 @@ export * from "./ActionMenuButton";
 export * from "./Tag";
 export * from "./Info";
 export * from "./Styled";
+export * from "./TaskModal";

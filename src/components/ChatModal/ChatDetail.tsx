@@ -3,28 +3,13 @@ import styled, { css } from "styled-components";
 
 import { Text } from "../Text";
 import { IconButton } from "../IconButton";
-import { MenuType } from "../ActionMenuButton";
+import { ActionMenuButton, MenuType } from "../ActionMenuButton";
 import { Info } from "../Info";
 import { Tag } from "../Tag";
 
 import { Colors } from "../../helpers/utils";
 import { DetailChatListType } from "../../helpers/types";
 import { getDetailChat } from "../../helpers/api";
-
-const menus: MenuType<{ chatId: 10; username: string }>[] = [
-  {
-    key: 0,
-    label: "Edit",
-    color: "#2f80ed",
-    data: { chatId: 10, username: "nizar" },
-  },
-  {
-    key: 1,
-    label: "Delete",
-    color: "#eb5757",
-    data: { chatId: 10, username: "andika" },
-  },
-];
 
 interface Props {
   onBack: () => void;
@@ -36,6 +21,19 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
   const chatContentRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<DetailChatListType | undefined>();
   const [loadInfo, setLoadInfo] = useState(false);
+
+  const menus: MenuType[] = [
+    {
+      key: 0,
+      label: "Edit",
+      color: "#2f80ed",
+    },
+    {
+      key: 1,
+      label: "Delete",
+      color: "#eb5757",
+    },
+  ];
 
   const getData = useCallback(async (chatId: number) => {
     try {
@@ -120,17 +118,16 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
                     {chat.sender}
                   </Text>
                   <ChatCard $isUser={chat.isUser}>
-                    <IconButton
-                      icon="more"
-                      size="md"
-                      withMenu
-                      actionMenuProp={{
-                        menus,
-                        onClickMenu: (menu) => {
-                          console.warn(menu.data?.chatId);
-                        },
-                      }}
-                    />
+                    <div>
+                      <ActionMenuButton
+                        menus={menus}
+                        onClickMenu={(menu) => {
+                          console.log({ menu, chat });
+                        }}
+                      >
+                        <IconButton icon="more" size="md" />
+                      </ActionMenuButton>
+                    </div>
                     <ChatText $bg={chat.background}>
                       <Text size="md">{chat.message}</Text>
                       <Text className="chat-text_time" size="sm">

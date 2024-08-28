@@ -67,3 +67,9 @@ h6 {
   background-color: #bdbdbd !important;
   border-radius: 8px;
 }
+
+/* Customize antd styled */
+
+.ant-popover-inner {
+  padding: 0px !important;
+}

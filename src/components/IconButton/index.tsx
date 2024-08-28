@@ -1,63 +1,31 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import { Icon, listIcon } from "../Icon";
-import { ActionMenuButton, ActionMenuProps } from "../ActionMenuButton";
 
-interface Props<T> extends React.HTMLAttributes<HTMLButtonElement> {
+interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   size?: "sm" | "md";
   icon: keyof typeof listIcon;
   iconStyle?: React.CSSProperties;
-  withMenu?: boolean;
-  actionMenuProp?: ActionMenuProps<T>;
 }
 
-export const IconButton = <T,>({
+export const IconButton = ({
   size = "md",
   icon,
   iconStyle,
-  withMenu,
-  actionMenuProp,
   onClick,
   ...others
-}: Props<T>) => {
-  const actionMenuRef = useRef<HTMLDivElement>(null);
-
+}: Props) => {
   const handleClickBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (typeof onClick === "function") onClick(e);
-
-    if (withMenu && actionMenuProp) {
-      actionMenuRef.current?.classList.toggle("active");
-    }
   };
 
   return (
-    <ButtonContainer>
-      <ButtonStyled className={`${size}`} {...others} onClick={handleClickBtn}>
-        <Icon name={icon} className="button_icon" style={iconStyle} />
-      </ButtonStyled>
-      {withMenu && actionMenuProp && (
-        <ActionMenuContainer ref={actionMenuRef} className="button_action-menu">
-          <ActionMenuButton {...actionMenuProp} />
-        </ActionMenuContainer>
-      )}
-    </ButtonContainer>
+    <ButtonStyled className={`${size}`} {...others} onClick={handleClickBtn}>
+      <Icon name={icon} className="button_icon" style={iconStyle} />
+    </ButtonStyled>
   );
 };
-
-const ButtonContainer = styled.div`
-  position: relative;
-
-  & .button_action-menu {
-    z-index: 999;
-    position: absolute;
-    display: none;
-  }
-
-  & .button_action-menu.active {
-    display: block;
-  }
-`;
 
 const ButtonStyled = styled.button`
   border: none;
@@ -71,6 +39,7 @@ const ButtonStyled = styled.button`
   &:hover {
     background: rgba(130, 130, 130, 0.1);
   }
+
   &:active {
     background: rgba(130, 130, 130, 0.2);
   }
@@ -98,5 +67,3 @@ const ButtonStyled = styled.button`
       hue-rotate(326deg) brightness(96%) contrast(77%);
   }
 `;
-
-const ActionMenuContainer = styled.div``;
