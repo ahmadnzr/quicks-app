@@ -1,4 +1,5 @@
 import { DetailChatListType, PreviewChatListType } from "../types";
+import { TaskType } from "../types/task";
 import { Colors } from "../utils";
 
 export const previewChats: PreviewChatListType[] = [
@@ -243,5 +244,35 @@ export const detailChats: DetailChatListType[] = [
         ],
       },
     ],
+  },
+];
+
+export const tasks: TaskType[] = [
+  {
+    id: 1,
+    title: "Cross-reference with Jeanne for Case #192813",
+    done: false,
+    due: "12/06/2021",
+    remeaning: "2 Days Left",
+    date: null,
+    desc: null,
+  },
+  {
+    id: 2,
+    title: "Contact Andrew for Online Meeting and Conference",
+    done: true,
+    due: "12/06/2021",
+    remeaning: "2 Days Left",
+    date: null,
+    desc: null,
+  },
+  {
+    id: 3,
+    remeaning: "2 Days Left",
+    done: true,
+    due: "12/06/2021",
+    title: "Contact Andrew for Online Meeting and Conference",
+    date: null,
+    desc: "Homeworks needed to be checked are as follows : Client Profile Questionnaire, Passport Requirements and Images, Personal Documents.",
   },
 ];

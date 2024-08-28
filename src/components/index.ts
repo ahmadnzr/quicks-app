@@ -11,3 +11,5 @@ export * from "./Tag";
 export * from "./Info";
 export * from "./Styled";
 export * from "./TaskModal";
+export * from "./Button";
+export * from "./DatePicker";

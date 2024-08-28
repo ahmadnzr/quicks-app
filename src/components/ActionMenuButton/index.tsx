@@ -3,7 +3,7 @@ import { TooltipPlacement } from "antd/es/tooltip";
 import styled from "styled-components";
 
 import { FontWeight } from "../../helpers/types";
-import { Colors } from "../../helpers/utils";
+import { Text } from "../Text";
 
 export interface MenuType {
   key: number;
@@ -42,13 +42,10 @@ export const ActionMenuButton = ({
       content={
         <ActionMenuButtonStyled className={className} $width={customWidth}>
           {menus.map((item) => (
-            <ActionItem
-              key={item.key}
-              $color={item.color || Colors.primary.grayDark}
-              $weight={item.weight || "regular"}
-              onClick={() => handleClickMenu(item)}
-            >
-              {item.label}
+            <ActionItem key={item.key} onClick={() => handleClickMenu(item)}>
+              <Text color={item.color} weight={item.weight}>
+                {item.label}
+              </Text>
             </ActionItem>
           ))}
         </ActionMenuButtonStyled>
@@ -70,15 +67,13 @@ const ActionMenuButtonStyled = styled.div<{ $width?: string }>`
   }
 `;
 
-const ActionItem = styled.button<{ $color?: string; $weight: FontWeight }>`
+const ActionItem = styled.button`
   width: 100%;
   padding: 14px 18px;
   text-align: left;
   border: none;
   background-color: transparent;
-  color: ${(props) => props.$color};
   cursor: pointer;
-  font-weight: ${(props) => props.theme.fontWeight[props.$weight]};
 
   &:active {
     background: rgba(130, 130, 130, 0.1);
