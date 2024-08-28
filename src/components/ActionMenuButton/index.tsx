@@ -1,39 +1,51 @@
+import { Popover } from "antd";
 import styled from "styled-components";
 
-export interface MenuType<T = object> {
+export interface MenuType {
   key: number;
   label: string;
   color?: string;
-  data?: T;
 }
 
-export interface ActionMenuProps<T = object> {
-  menus?: MenuType<T>[];
-  onClickMenu: (menu: MenuType<T>) => void;
+export interface ActionMenuProps {
+  menus: MenuType[];
+  onClickMenu: (menu: MenuType) => void;
   className?: string;
+  children?: React.ReactNode;
 }
 
-export const ActionMenuButton = <T = object,>({
+export const ActionMenuButton = ({
+  children,
   onClickMenu,
   className,
   menus = [],
-}: ActionMenuProps<T>) => {
-  const handleClickMenu = (menu: MenuType<T>) => {
+}: ActionMenuProps) => {
+  const handleClickMenu = (menu: MenuType) => {
     onClickMenu(menu);
   };
 
   return (
-    <ActionMenuButtonStyled className={className}>
-      {menus.map((item) => (
-        <ActionItem
-          key={item.key}
-          $color={item.color}
-          onClick={() => handleClickMenu(item)}
-        >
-          {item.label}
-        </ActionItem>
-      ))}
-    </ActionMenuButtonStyled>
+    <Popover
+      trigger="click"
+      placement="bottomLeft"
+      title=""
+      arrow={false}
+      content={
+        <ActionMenuButtonStyled className={className}>
+          {menus.map((item) => (
+            <ActionItem
+              key={item.key}
+              $color={item.color}
+              onClick={() => handleClickMenu(item)}
+            >
+              {item.label}
+            </ActionItem>
+          ))}
+        </ActionMenuButtonStyled>
+      }
+    >
+      <div>{children}</div>
+    </Popover>
   );
 };
 
@@ -58,6 +70,6 @@ const ActionItem = styled.button<{ $color?: string }>`
   cursor: pointer;
 
   &:active {
-    background: rgba(130, 130, 130, 0.05);
+    background: rgba(130, 130, 130, 0.1);
   }
 `;
