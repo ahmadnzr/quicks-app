@@ -6,6 +6,10 @@ export const Colors = {
     light: "#E0E0E0",
     red: "#EB5757",
   },
+  filter: {
+    blue: "brightness(0) saturate(100%) invert(44%) sepia(19%) saturate(7048%) hue-rotate(199deg) brightness(95%) contrast(95%)",
+  },
+
   indicator: {
     purple: {
       fg: "#9B51E0",
