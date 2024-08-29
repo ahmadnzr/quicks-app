@@ -24,7 +24,7 @@ export const DatePickerInput = ({ value = new Date(), onChange }: Props) => {
           <div
             style={{
               position: "relative",
-              transform: "translate(70%, 9px)",
+              transform: "translate(90%, 9px)",
             }}
           >
             <CalendarContainer className={className}>

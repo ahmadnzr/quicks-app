@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { DetailChatListType, PreviewChatListType } from "../types";
 import { TaskType } from "../types/task";
 import { Colors } from "../utils";
@@ -252,27 +253,29 @@ export const tasks: TaskType[] = [
     id: 1,
     title: "Cross-reference with Jeanne for Case #192813",
     done: false,
-    due: "12/06/2021",
-    remeaning: "2 Days Left",
-    date: null,
-    desc: null,
+    date: dayjs().add(2, "day").toDate(),
+    desc: "Closing off this case since this application has been cancelled. No one really understand how this case could possibly be cancelled. The options and the documents within this document were totally a guaranteed for a success!",
   },
   {
     id: 2,
-    title: "Contact Andrew for Online Meeting and Conference",
-    done: true,
-    due: "12/06/2021",
-    remeaning: "2 Days Left",
-    date: null,
-    desc: null,
+    title:
+      "Set up documentation report for several Cases : Case 145443, Case 192829 and Case 182203",
+    done: false,
+    date: dayjs().add(5, "day").toDate(),
+    desc: "All Cases must include all payment transactions, all documents and forms filled. All conversations in comments and messages in channels and emails should be provided as well in.",
   },
   {
     id: 3,
-    remeaning: "2 Days Left",
+    done: false,
+    title: "Set up appointment with Dr Blake",
+    date: dayjs().add(10, "day").toDate(),
+    desc: null,
+  },
+  {
+    id: 4,
     done: true,
-    due: "12/06/2021",
-    title: "Contact Andrew for Online Meeting and Conference",
-    date: null,
+    title: "Set up appointment with Dr Blake",
+    date: dayjs().add(1, "day").toDate(),
     desc: "Homeworks needed to be checked are as follows : Client Profile Questionnaire, Passport Requirements and Images, Personal Documents.",
   },
 ];

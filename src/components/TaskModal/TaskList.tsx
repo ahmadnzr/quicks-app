@@ -6,7 +6,7 @@ import ExpandIcon from "../../assets/expand.png";
 
 import { TaskType } from "../../helpers/types";
 import { getTaskList } from "../../helpers/api";
-import { Colors } from "../../helpers/utils";
+import { Colors, formatDate, getDateDiff } from "../../helpers/utils";
 
 import { Text } from "../Text";
 import { Rotate } from "../Styled";
@@ -49,6 +49,21 @@ export const TaskList = () => {
       setLoading(false);
     }
   }, []);
+
+  const addNewTask = () => {
+    setData((prev) => {
+      const newTask: TaskType = {
+        id: prev.length + 1,
+        title: "",
+        done: false,
+        date: null,
+        desc: null,
+      };
+      const tasks = [...prev, newTask];
+
+      return tasks;
+    });
+  };
 
   const updateData = (newTask: TaskType) => {
     const newData: TaskType[] = [];
@@ -141,7 +156,7 @@ export const TaskList = () => {
             </DropdownTask>
           </ActionMenuButton>
         </DropdownContainer>
-        <Button>New Task</Button>
+        <Button onClick={addNewTask}>New Task</Button>
       </TaskHeader>
 
       <TaskContent>
@@ -165,12 +180,12 @@ export const TaskList = () => {
                     />
                   </CheckTitle>
                   <Detail>
-                    {!task.done && (
+                    {!task.done && task?.date && (
                       <Text size="sm" color={Colors.primary.red}>
-                        {task.remeaning}
+                        {getDateDiff(task.date)} Days Left
                       </Text>
                     )}
-                    <Text size="sm">{task.due}</Text>
+                    <Text size="sm">{formatDate(task.date)}</Text>
                     <IconButton
                       icon="expand"
                       style={{
@@ -312,7 +327,7 @@ const DropdownTask = styled.button`
 const TaskContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  margin-right: -13px;
+  margin-right: -21px;
   padding-right: 13px;
   position: relative;
 `;

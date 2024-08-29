@@ -8,7 +8,7 @@ import { Info } from "../Info";
 import { Tag } from "../Tag";
 
 import { Colors } from "../../helpers/utils";
-import { DetailChatListType } from "../../helpers/types";
+import { ChatItemType, DetailChatListType } from "../../helpers/types";
 import { getDetailChat } from "../../helpers/api";
 
 interface Props {
@@ -16,24 +16,38 @@ interface Props {
   chatId?: number;
 }
 
+const userMenu: MenuType<"EDIT" | "DELETE">[] = [
+  {
+    key: "EDIT",
+    label: "Edit",
+    color: "#2f80ed",
+  },
+  {
+    key: "DELETE",
+    label: "Delete",
+    color: "#eb5757",
+  },
+];
+
+const otherMenu: MenuType<"SHARE" | "REPLAY">[] = [
+  {
+    key: "SHARE",
+    label: "Share",
+    color: "#2f80ed",
+  },
+  {
+    key: "REPLAY",
+    label: "Replay",
+    color: "#2f80ed",
+  },
+];
+
 export const ChatDetail = ({ onBack, chatId }: Props) => {
   const tagRef = useRef<HTMLDivElement>(null);
   const chatContentRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<DetailChatListType | undefined>();
   const [loadInfo, setLoadInfo] = useState(false);
-
-  const menus: MenuType[] = [
-    {
-      key: 0,
-      label: "Edit",
-      color: "#2f80ed",
-    },
-    {
-      key: 1,
-      label: "Delete",
-      color: "#eb5757",
-    },
-  ];
+  const [selectedChat, setSelectedChat] = useState<ChatItemType | null>(null);
 
   const getData = useCallback(async (chatId: number) => {
     try {
@@ -120,9 +134,12 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
                   <ChatCard $isUser={chat.isUser}>
                     <div>
                       <ActionMenuButton
-                        menus={menus}
+                        menus={chat.isUser ? userMenu : otherMenu}
+                        placement={chat.isUser ? "bottomLeft" : "bottomRight"}
                         onClickMenu={(menu) => {
-                          console.log({ menu, chat });
+                          if (menu.key === "REPLAY") {
+                            setSelectedChat(chat);
+                          }
                         }}
                       >
                         <IconButton icon="more" size="md" />
@@ -151,7 +168,23 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
           </Info>
         ) : null}
 
-        <Input placeholder="Type a new message" />
+        <ReplayContainer>
+          {selectedChat ? (
+            <Replay>
+              <Text weight="bold" style={{ marginBottom: "5px" }}>
+                Replaying to {selectedChat?.sender}
+              </Text>
+              <Text>{selectedChat?.message}</Text>
+              <IconButton
+                icon="close"
+                iconStyle={{ height: "12px", width: "12px" }}
+                className="close_replay"
+                onClick={() => setSelectedChat(null)}
+              />
+            </Replay>
+          ) : null}
+          <Input placeholder="Type a new message" />
+        </ReplayContainer>
         <Button>
           <Text size="lg" weight="bold" color="#fff">
             Send
@@ -186,8 +219,8 @@ const Participant = styled.div`
   }
 `;
 
-const ChatContent = styled.div`
-  margin-right: -26px;
+const ChatContent = styled.div<{ $paddingBottom?: string }>`
+  margin-right: -21px;
   padding-right: 13px;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -257,7 +290,6 @@ const Divider = styled.div<{ $color?: string }>`
 `;
 
 const ChatFooter = styled.div`
-  height: 40px;
   position: relative;
 
   display: flex;
@@ -284,9 +316,8 @@ const ChatFooter = styled.div`
   }
 `;
 const Input = styled.input`
+  width: 100%;
   padding: 10px 16px;
-
-  flex: 1;
 
   border: 1px solid #828282;
   border-radius: 5px;
@@ -294,6 +325,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
+  height: 100%;
   padding: 8px 16px;
 
   border: none;
@@ -308,5 +340,28 @@ const Button = styled.button`
   }
   &:active {
     opacity: 1;
+  }
+`;
+
+const ReplayContainer = styled.div`
+  flex: 1;
+  position: relative;
+`;
+
+const Replay = styled.div`
+  max-height: 107px;
+  padding: 15px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 49px;
+  background-color: ${Colors.primary.light};
+  z-index: 999;
+  border-radius: 10px 10px 0 0;
+
+  & .close_replay {
+    position: absolute;
+    top: 15px;
+    right: 20px;
   }
 `;

@@ -69,7 +69,9 @@ export const ChatList = ({ onClick }: Props) => {
                   </ChatMeta>
                   <LastChat>
                     <Text weight="bold">{item?.lastChat.sender}</Text>
-                    <Text size="sm">{item?.lastChat.message}</Text>
+                    <Text className="lastchat_preview" size="sm">
+                      {item?.lastChat.message}
+                    </Text>
                   </LastChat>
                 </DetailChat>
               </ChatCard>
@@ -91,7 +93,7 @@ const ChatHeader = styled.div``;
 const ChatContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  margin-right: -13px;
+  margin-right: -21px;
   padding-right: 13px;
   position: relative;
 `;

@@ -1,4 +1,4 @@
-export interface ChatItem {
+export interface ChatItemType {
   isUser: boolean;
   sender: string;
   message: string;
@@ -10,7 +10,7 @@ export interface ChatItem {
 export interface ChatListType {
   isNew?: boolean;
   date: string;
-  chat: ChatItem[];
+  chat: ChatItemType[];
 }
 
 export interface DetailChatListType {
