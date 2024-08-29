@@ -44,7 +44,9 @@ const otherMenu: MenuType<"SHARE" | "REPLAY">[] = [
 
 export const ChatDetail = ({ onBack, chatId }: Props) => {
   const tagRef = useRef<HTMLDivElement>(null);
+  const replayRef = useRef<HTMLDivElement>(null);
   const chatContentRef = useRef<HTMLDivElement>(null);
+
   const [data, setData] = useState<DetailChatListType | undefined>();
   const [loadInfo, setLoadInfo] = useState(false);
   const [selectedChat, setSelectedChat] = useState<ChatItemType | null>(null);
@@ -101,6 +103,8 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
     return () => clearTimeout(timer);
   }, [data?.isSupport]);
 
+  useEffect(() => {}, [replayRef.current]);
+
   return (
     <React.Fragment>
       <ChatHeader>
@@ -115,7 +119,13 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
         </Participant>
         <IconButton icon="close" size="sm" />
       </ChatHeader>
-      <ChatContent ref={chatContentRef} onScroll={handleScroll}>
+      <ChatContent
+        ref={chatContentRef}
+        onScroll={handleScroll}
+        $paddingBottom={
+          replayRef.current ? `${replayRef.current.clientHeight + 12}px` : ""
+        }
+      >
         {data?.chats.map((item, i) => {
           return (
             <React.Fragment key={i}>
@@ -139,6 +149,16 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
                         onClickMenu={(menu) => {
                           if (menu.key === "REPLAY") {
                             setSelectedChat(chat);
+                            replayRef.current?.classList.add("show");
+                          }
+
+                          // prevent chat last chat to be hidden
+                          if (replayRef.current) {
+                            console.log(replayRef.current.clientHeight);
+                            chatContentRef.current?.style.setProperty(
+                              "padding-bottom",
+                              replayRef.current?.clientHeight + 50 + "px",
+                            );
                           }
                         }}
                       >
@@ -169,20 +189,25 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
         ) : null}
 
         <ReplayContainer>
-          {selectedChat ? (
-            <Replay>
-              <Text weight="bold" style={{ marginBottom: "5px" }}>
-                Replaying to {selectedChat?.sender}
-              </Text>
-              <Text>{selectedChat?.message}</Text>
-              <IconButton
-                icon="close"
-                iconStyle={{ height: "12px", width: "12px" }}
-                className="close_replay"
-                onClick={() => setSelectedChat(null)}
-              />
-            </Replay>
-          ) : null}
+          <Replay ref={replayRef}>
+            <Text weight="bold" style={{ marginBottom: "5px" }}>
+              Replaying to {selectedChat?.sender}
+            </Text>
+            <Text>{selectedChat?.message}</Text>
+            <IconButton
+              icon="close"
+              iconStyle={{ height: "12px", width: "12px" }}
+              className="close_replay"
+              onClick={() => {
+                setSelectedChat(null);
+                replayRef.current?.classList.remove("show");
+                chatContentRef.current?.style.setProperty(
+                  "padding-bottom",
+                  "0",
+                );
+              }}
+            />
+          </Replay>
           <Input placeholder="Type a new message" />
         </ReplayContainer>
         <Button>
@@ -219,11 +244,11 @@ const Participant = styled.div`
   }
 `;
 
-const ChatContent = styled.div<{ $paddingBottom?: string }>`
+const ChatContent = styled.div`
   margin-right: -21px;
   padding-right: 13px;
   padding-top: 12px;
-  padding-bottom: 12px;
+  padding-bottom: "12px"
 
   position: relative;
 
@@ -354,14 +379,19 @@ const Replay = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 49px;
+  bottom: 47px;
   background-color: ${Colors.primary.light};
   z-index: 999;
   border-radius: 10px 10px 0 0;
+  display: none;
 
   & .close_replay {
     position: absolute;
     top: 15px;
     right: 20px;
+  }
+
+  &.show {
+    display: block;
   }
 `;
