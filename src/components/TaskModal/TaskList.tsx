@@ -16,6 +16,7 @@ import { Icon } from "../Icon";
 import { IconButton } from "../IconButton";
 
 import { DatePickerInput } from "../DatePicker";
+import { CheckTask } from "../CheckTask";
 
 const menus: MenuType[] = [
   {
@@ -116,28 +117,12 @@ export const TaskList = () => {
             {data.map((task) => (
               <TaskCard key={task.id}>
                 <CardHeader>
-                  <LabelContainer>
-                    <Text
-                      size="lg"
-                      weight="bold"
-                      style={{
-                        textDecoration: task.done ? "line-through" : "none",
-                      }}
-                      color={
-                        task.done
-                          ? Colors.primary.grayLight
-                          : Colors.primary.grayDark
-                      }
-                    >
-                      {task.title}
-                    </Text>
-                    <input
-                      type="checkbox"
-                      checked={task.done}
-                      onChange={(e) => handleCheck(e, task)}
-                    />
-                    <span className="checkmark"></span>
-                  </LabelContainer>
+                  <CheckTask
+                    className="task_check"
+                    label={task.title}
+                    checked={task.done}
+                    onCheck={(e) => handleCheck(e, task)}
+                  />
                   <Detail>
                     {!task.done && (
                       <Text size="sm" color={Colors.primary.red}>
@@ -301,70 +286,16 @@ const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  & .task_check {
+    padding-left: 35px;
+  }
 `;
 
 const Detail = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
-
-const LabelContainer = styled.label`
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  cursor: pointer;
-  font-size: 22px;
-  user-select: none;
-  transition: 0.3s ease;
-
-  & > * {
-    transition: 0.3s ease;
-  }
-
-  & input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-
-  & .checkmark {
-    height: 18px;
-    width: 18px;
-
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-
-    border: 1px solid ${Colors.primary.grayLight};
-  }
-
-  & .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-
-  & input:checked ~ .checkmark:after {
-    display: block;
-  }
-
-  & .checkmark:after {
-    width: 5px;
-    height: 10px;
-
-    position: absolute;
-    left: 5px;
-    top: 2px;
-    transform: translate(-50%, -50%);
-
-    border: solid ${Colors.primary.grayLight};
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-  }
 `;
 
 const CardContent = styled.div`

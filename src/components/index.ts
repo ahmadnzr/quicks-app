@@ -13,3 +13,4 @@ export * from "./Styled";
 export * from "./TaskModal";
 export * from "./Button";
 export * from "./DatePicker";
+export * from "./CheckTask";
