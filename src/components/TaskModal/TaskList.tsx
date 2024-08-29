@@ -16,6 +16,21 @@ import { Icon } from "../Icon";
 import { IconButton } from "../IconButton";
 
 import { DatePickerInput } from "../DatePicker";
+import { CheckTask } from "../CheckTask";
+import { TaskDesc } from "../TaskDesc";
+
+const menus: MenuType[] = [
+  {
+    key: 0,
+    label: "Personal Errands",
+    weight: "bold",
+  },
+  {
+    key: 1,
+    label: "Urgent To-Do",
+    weight: "bold",
+  },
+];
 
 export const TaskList = () => {
   const [loading, setLoading] = useState(true);
@@ -34,29 +49,11 @@ export const TaskList = () => {
     }
   }, []);
 
-  const menus: MenuType[] = [
-    {
-      key: 0,
-      label: "Personal Errands",
-      weight: "bold",
-    },
-    {
-      key: 1,
-      label: "Urgent To-Do",
-      weight: "bold",
-    },
-  ];
-
-  const handleCheck = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    task: TaskType,
-  ) => {
-    const val = e.target.checked;
-    const newTask = { ...task, done: val };
+  const updateData = (newTask: TaskType) => {
     const newData: TaskType[] = [];
 
     data.forEach((item) => {
-      if (item.id === task.id) {
+      if (item.id === newTask.id) {
         newData.push(newTask);
         return;
       }
@@ -66,9 +63,35 @@ export const TaskList = () => {
     setData(newData);
   };
 
+  const handleCheck = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    task: TaskType,
+  ) => {
+    const val = e.target.checked;
+    const newTask = { ...task, done: val };
+    updateData(newTask);
+  };
+
   const handleDelete = (task: TaskType) => {
     const newTask = data.filter((item) => item.id !== task.id);
     setData(newTask);
+  };
+
+  const handleChangeTask = ({
+    date,
+    desc,
+    task,
+  }: {
+    date?: Date | null;
+    desc?: string | null;
+    task: TaskType;
+  }) => {
+    const newTask = {
+      ...task,
+      date: date || null,
+      desc,
+    };
+    updateData(newTask);
   };
 
   useEffect(() => {
@@ -101,28 +124,12 @@ export const TaskList = () => {
             {data.map((task) => (
               <TaskCard key={task.id}>
                 <CardHeader>
-                  <LabelContainer>
-                    <Text
-                      size="lg"
-                      weight="bold"
-                      style={{
-                        textDecoration: task.done ? "line-through" : "none",
-                      }}
-                      color={
-                        task.done
-                          ? Colors.primary.grayLight
-                          : Colors.primary.grayDark
-                      }
-                    >
-                      {task.title}
-                    </Text>
-                    <input
-                      type="checkbox"
-                      checked={task.done}
-                      onChange={(e) => handleCheck(e, task)}
-                    />
-                    <span className="checkmark"></span>
-                  </LabelContainer>
+                  <CheckTask
+                    className="task_check"
+                    label={task.title}
+                    checked={task.done}
+                    onCheck={(e) => handleCheck(e, task)}
+                  />
                   <Detail>
                     {!task.done && (
                       <Text size="sm" color={Colors.primary.red}>
@@ -178,7 +185,10 @@ export const TaskList = () => {
                       }}
                       className="task_icon"
                     />
-                    <DatePickerInput />
+                    <DatePickerInput
+                      value={task.date}
+                      onChange={(date) => handleChangeTask({ date, task })}
+                    />
                   </ContentItem>
                   <ContentItem $isFilled={Boolean(task.desc)}>
                     <Icon
@@ -191,7 +201,13 @@ export const TaskList = () => {
                       className="task_icon"
                     />
 
-                    <TextArea value={task.desc || ""} />
+                    <TaskDesc
+                      placeholder="No Description"
+                      value={task.desc || ""}
+                      onChange={(e) => {
+                        handleChangeTask({ task, desc: e.target.value });
+                      }}
+                    />
                   </ContentItem>
                 </CardContent>
               </TaskCard>
@@ -283,70 +299,16 @@ const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  & .task_check {
+    padding-left: 35px;
+  }
 `;
 
 const Detail = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
-
-const LabelContainer = styled.label`
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  cursor: pointer;
-  font-size: 22px;
-  user-select: none;
-  transition: 0.3s ease;
-
-  & > * {
-    transition: 0.3s ease;
-  }
-
-  & input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-
-  & .checkmark {
-    height: 18px;
-    width: 18px;
-
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-
-    border: 1px solid ${Colors.primary.grayLight};
-  }
-
-  & .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-
-  & input:checked ~ .checkmark:after {
-    display: block;
-  }
-
-  & .checkmark:after {
-    width: 5px;
-    height: 10px;
-
-    position: absolute;
-    left: 5px;
-    top: 2px;
-    transform: translate(-50%, -50%);
-
-    border: solid ${Colors.primary.grayLight};
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-  }
 `;
 
 const CardContent = styled.div`
@@ -371,13 +333,4 @@ const ContentItem = styled.div<{ $isFilled?: boolean }>`
   & .task_icon {
     filter: ${(props) => (props.$isFilled ? Colors.filter.blue : "none")};
   }
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 10px 12px;
-  resize: none;
-  border-radius: 5px;
-  border: 1px solid ${Colors.primary.grayLight};
-  color: ${Colors.primary.grayDark};
 `;

@@ -4,6 +4,6 @@ export type TaskType = {
   done: boolean;
   due: string;
   remeaning: string;
-  date: string | null;
-  desc: string | null;
+  date: Date | null;
+  desc?: string | null;
 };
