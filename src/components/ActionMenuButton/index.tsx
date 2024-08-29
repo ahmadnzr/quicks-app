@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import { FontWeight } from "../../helpers/types";
 import { Text } from "../Text";
-import { useState } from "react";
 
 export interface MenuType<T = number> {
   key: T;
@@ -30,21 +29,16 @@ export const ActionMenuButton = <T = number,>({
   menus = [],
   customWidth,
 }: ActionMenuProps<T>) => {
-  const [click, setClik] = useState(false);
-
   const handleClickMenu = (menu: MenuType<T>) => {
-    setClik(false);
     onClickMenu(menu);
   };
 
   return (
     <Popover
       trigger="click"
-      open={click}
       placement={placement}
       title=""
       arrow={false}
-      onOpenChange={() => setClik(true)}
       content={
         <ActionMenuButtonStyled className={className} $width={customWidth}>
           {menus.map((item, i) => (

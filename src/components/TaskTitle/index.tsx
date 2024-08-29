@@ -63,7 +63,7 @@ export const TaskTitle = ({ done = false, value, onChange }: Props) => {
 const Container = styled.div`
   display: flex;
   align-items: center;
-  width: 380px;
+  width: 370px;
   min-height: 40px;
   border-radius: 5px;
 `;
