@@ -7,7 +7,7 @@ import { Text } from "../Text";
 
 interface Props {
   checked?: boolean;
-  label: string;
+  label?: string;
   onCheck: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
@@ -15,16 +15,18 @@ interface Props {
 export const CheckTask = ({ className, checked, label, onCheck }: Props) => {
   return (
     <LabelContainer className={className}>
-      <Text
-        size="lg"
-        weight="bold"
-        style={{
-          textDecoration: checked ? "line-through" : "none",
-        }}
-        color={checked ? Colors.primary.grayLight : Colors.primary.grayDark}
-      >
-        {label}
-      </Text>
+      {label && (
+        <Text
+          size="lg"
+          weight="bold"
+          style={{
+            textDecoration: checked ? "line-through" : "none",
+          }}
+          color={checked ? Colors.primary.grayLight : Colors.primary.grayDark}
+        >
+          {label}
+        </Text>
+      )}
       <input type="checkbox" checked={checked} onChange={onCheck} />
       <span className="checkmark"></span>
     </LabelContainer>

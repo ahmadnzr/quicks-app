@@ -18,6 +18,7 @@ import { IconButton } from "../IconButton";
 import { DatePickerInput } from "../DatePicker";
 import { CheckTask } from "../CheckTask";
 import { TaskDesc } from "../TaskDesc";
+import { TaskTitle } from "../TaskTitle";
 
 const menus: MenuType[] = [
   {
@@ -77,19 +78,44 @@ export const TaskList = () => {
     setData(newTask);
   };
 
-  const handleChangeTask = ({
+  const handleChangeDate = ({
     date,
-    desc,
     task,
   }: {
     date?: Date | null;
-    desc?: string | null;
     task: TaskType;
   }) => {
     const newTask = {
       ...task,
       date: date || null,
-      desc,
+    };
+    updateData(newTask);
+  };
+
+  const handleChangeDesc = ({
+    desc,
+    task,
+  }: {
+    desc?: string;
+    task: TaskType;
+  }) => {
+    const newTask = {
+      ...task,
+      desc: desc || "",
+    };
+    updateData(newTask);
+  };
+
+  const handleChangeTitle = ({
+    title,
+    task,
+  }: {
+    title?: string;
+    task: TaskType;
+  }) => {
+    const newTask: TaskType = {
+      ...task,
+      title: title || "",
     };
     updateData(newTask);
   };
@@ -124,12 +150,20 @@ export const TaskList = () => {
             {data.map((task) => (
               <TaskCard key={task.id}>
                 <CardHeader>
-                  <CheckTask
-                    className="task_check"
-                    label={task.title}
-                    checked={task.done}
-                    onCheck={(e) => handleCheck(e, task)}
-                  />
+                  <CheckTitle>
+                    <CheckTask
+                      className="task_check"
+                      checked={task.done}
+                      onCheck={(e) => handleCheck(e, task)}
+                    />
+                    <TaskTitle
+                      done={task.done}
+                      value={task.title}
+                      onChange={(e) =>
+                        handleChangeTitle({ task, title: e.target.value })
+                      }
+                    />
+                  </CheckTitle>
                   <Detail>
                     {!task.done && (
                       <Text size="sm" color={Colors.primary.red}>
@@ -187,15 +221,19 @@ export const TaskList = () => {
                     />
                     <DatePickerInput
                       value={task.date}
-                      onChange={(date) => handleChangeTask({ date, task })}
+                      onChange={(date) => handleChangeDate({ date, task })}
                     />
                   </ContentItem>
-                  <ContentItem $isFilled={Boolean(task.desc)}>
+                  <ContentItem
+                    $isFilled={Boolean(task.desc)}
+                    style={{ alignItems: "flex-start" }}
+                  >
                     <Icon
                       name="pencil"
                       style={{
                         height: "15px",
                         width: "15px",
+                        marginTop: "5px",
                         marginRight: "5px",
                       }}
                       className="task_icon"
@@ -205,7 +243,7 @@ export const TaskList = () => {
                       placeholder="No Description"
                       value={task.desc || ""}
                       onChange={(e) => {
-                        handleChangeTask({ task, desc: e.target.value });
+                        handleChangeDesc({ task, desc: e.target.value });
                       }}
                     />
                   </ContentItem>
@@ -333,4 +371,8 @@ const ContentItem = styled.div<{ $isFilled?: boolean }>`
   & .task_icon {
     filter: ${(props) => (props.$isFilled ? Colors.filter.blue : "none")};
   }
+`;
+
+const CheckTitle = styled.div`
+  display: flex;
 `;
