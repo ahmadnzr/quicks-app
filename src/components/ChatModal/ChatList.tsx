@@ -52,8 +52,14 @@ export const ChatList = ({ onClick }: Props) => {
                 $borderBottom={!item.isSupport}
               >
                 <ProfileContainer>
-                  <Profile className="profile" primary={false} />
-                  <Profile className="profile" />
+                  {item.isSupport ? (
+                    <Profile className="profile" initial="F" />
+                  ) : (
+                    <>
+                      <Profile className="profile" primary={false} />
+                      <Profile className="profile" />
+                    </>
+                  )}
                 </ProfileContainer>
                 <DetailChat>
                   <ChatMeta>
