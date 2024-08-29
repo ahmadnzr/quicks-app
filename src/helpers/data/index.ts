@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { DetailChatListType, PreviewChatListType } from "../types";
 import { TaskType } from "../types/task";
 import { Colors } from "../utils";
@@ -252,27 +253,21 @@ export const tasks: TaskType[] = [
     id: 1,
     title: "Cross-reference with Jeanne for Case #192813",
     done: false,
-    due: "12/06/2021",
-    remeaning: "2 Days Left",
-    date: null,
+    date: dayjs().add(2, "day").toDate(),
     desc: null,
   },
   {
     id: 2,
     title: "Contact Andrew for Online Meeting and Conference",
     done: true,
-    due: "12/06/2021",
-    remeaning: "2 Days Left",
-    date: null,
+    date: dayjs().add(5, "day").toDate(),
     desc: null,
   },
   {
     id: 3,
-    remeaning: "2 Days Left",
     done: true,
-    due: "12/06/2021",
     title: "Contact Andrew for Online Meeting and Conference",
-    date: null,
+    date: dayjs().add(10, "day").toDate(),
     desc: "Homeworks needed to be checked are as follows : Client Profile Questionnaire, Passport Requirements and Images, Personal Documents.",
   },
 ];
