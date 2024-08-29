@@ -4,45 +4,51 @@ import styled from "styled-components";
 
 import { FontWeight } from "../../helpers/types";
 import { Text } from "../Text";
+import { useState } from "react";
 
-export interface MenuType {
-  key: number;
+export interface MenuType<T = number> {
+  key: T;
   label: string;
   color?: string;
   weight?: FontWeight;
 }
 
-export interface ActionMenuProps {
-  menus: MenuType[];
-  onClickMenu: (menu: MenuType) => void;
+export interface ActionMenuProps<T> {
+  menus: MenuType<T>[];
+  onClickMenu: (menu: MenuType<T>) => void;
   className?: string;
   customWidth?: string;
   placement?: TooltipPlacement;
   children?: React.ReactNode;
 }
 
-export const ActionMenuButton = ({
+export const ActionMenuButton = <T = number,>({
   children,
   onClickMenu,
   className,
   placement = "bottomLeft",
   menus = [],
   customWidth,
-}: ActionMenuProps) => {
-  const handleClickMenu = (menu: MenuType) => {
+}: ActionMenuProps<T>) => {
+  const [click, setClik] = useState(false);
+
+  const handleClickMenu = (menu: MenuType<T>) => {
+    setClik(false);
     onClickMenu(menu);
   };
 
   return (
     <Popover
       trigger="click"
+      open={click}
       placement={placement}
       title=""
       arrow={false}
+      onOpenChange={() => setClik(true)}
       content={
         <ActionMenuButtonStyled className={className} $width={customWidth}>
-          {menus.map((item) => (
-            <ActionItem key={item.key} onClick={() => handleClickMenu(item)}>
+          {menus.map((item, i) => (
+            <ActionItem key={i} onClick={() => handleClickMenu(item)}>
               <Text color={item.color} weight={item.weight}>
                 {item.label}
               </Text>
