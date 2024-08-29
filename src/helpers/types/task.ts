@@ -5,5 +5,5 @@ export type TaskType = {
   due: string;
   remeaning: string;
   date: Date | null;
-  desc: string | null;
+  desc?: string | null;
 };

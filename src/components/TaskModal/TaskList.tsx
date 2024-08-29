@@ -17,6 +17,7 @@ import { IconButton } from "../IconButton";
 
 import { DatePickerInput } from "../DatePicker";
 import { CheckTask } from "../CheckTask";
+import { TaskDesc } from "../TaskDesc";
 
 const menus: MenuType[] = [
   {
@@ -76,14 +77,20 @@ export const TaskList = () => {
     setData(newTask);
   };
 
-  const handleChangeDate = ({
+  const handleChangeTask = ({
     date,
+    desc,
     task,
   }: {
-    date: Date | null;
+    date?: Date | null;
+    desc?: string | null;
     task: TaskType;
   }) => {
-    const newTask = { ...task, date };
+    const newTask = {
+      ...task,
+      date: date || null,
+      desc,
+    };
     updateData(newTask);
   };
 
@@ -180,7 +187,7 @@ export const TaskList = () => {
                     />
                     <DatePickerInput
                       value={task.date}
-                      onChange={(date) => handleChangeDate({ date, task })}
+                      onChange={(date) => handleChangeTask({ date, task })}
                     />
                   </ContentItem>
                   <ContentItem $isFilled={Boolean(task.desc)}>
@@ -194,7 +201,13 @@ export const TaskList = () => {
                       className="task_icon"
                     />
 
-                    <TextArea value={task.desc || ""} />
+                    <TaskDesc
+                      placeholder="No Description"
+                      value={task.desc || ""}
+                      onChange={(e) => {
+                        handleChangeTask({ task, desc: e.target.value });
+                      }}
+                    />
                   </ContentItem>
                 </CardContent>
               </TaskCard>
@@ -320,13 +333,4 @@ const ContentItem = styled.div<{ $isFilled?: boolean }>`
   & .task_icon {
     filter: ${(props) => (props.$isFilled ? Colors.filter.blue : "none")};
   }
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 10px 12px;
-  resize: none;
-  border-radius: 5px;
-  border: 1px solid ${Colors.primary.grayLight};
-  color: ${Colors.primary.grayDark};
 `;
