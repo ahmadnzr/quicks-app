@@ -17,6 +17,19 @@ import { IconButton } from "../IconButton";
 
 import { DatePickerInput } from "../DatePicker";
 
+const menus: MenuType[] = [
+  {
+    key: 0,
+    label: "Personal Errands",
+    weight: "bold",
+  },
+  {
+    key: 1,
+    label: "Urgent To-Do",
+    weight: "bold",
+  },
+];
+
 export const TaskList = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<TaskType[] | []>([]);
@@ -34,29 +47,11 @@ export const TaskList = () => {
     }
   }, []);
 
-  const menus: MenuType[] = [
-    {
-      key: 0,
-      label: "Personal Errands",
-      weight: "bold",
-    },
-    {
-      key: 1,
-      label: "Urgent To-Do",
-      weight: "bold",
-    },
-  ];
-
-  const handleCheck = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    task: TaskType,
-  ) => {
-    const val = e.target.checked;
-    const newTask = { ...task, done: val };
+  const updateData = (newTask: TaskType) => {
     const newData: TaskType[] = [];
 
     data.forEach((item) => {
-      if (item.id === task.id) {
+      if (item.id === newTask.id) {
         newData.push(newTask);
         return;
       }
@@ -66,9 +61,29 @@ export const TaskList = () => {
     setData(newData);
   };
 
+  const handleCheck = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    task: TaskType,
+  ) => {
+    const val = e.target.checked;
+    const newTask = { ...task, done: val };
+    updateData(newTask);
+  };
+
   const handleDelete = (task: TaskType) => {
     const newTask = data.filter((item) => item.id !== task.id);
     setData(newTask);
+  };
+
+  const handleChangeDate = ({
+    date,
+    task,
+  }: {
+    date: Date | null;
+    task: TaskType;
+  }) => {
+    const newTask = { ...task, date };
+    updateData(newTask);
   };
 
   useEffect(() => {
@@ -178,7 +193,10 @@ export const TaskList = () => {
                       }}
                       className="task_icon"
                     />
-                    <DatePickerInput />
+                    <DatePickerInput
+                      value={task.date}
+                      onChange={(date) => handleChangeDate({ date, task })}
+                    />
                   </ContentItem>
                   <ContentItem $isFilled={Boolean(task.desc)}>
                     <Icon

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import styled from "styled-components";
 import DatePicker, { CalendarContainer } from "react-datepicker";
 
@@ -11,9 +12,11 @@ interface Props {
   onChange?: (date: Date | null) => void;
 }
 
-export const DatePickerInput = ({ value, onChange }: Props) => {
+export const DatePickerInput = ({ value = new Date(), onChange }: Props) => {
+  const datePickerContainerRef = useRef<HTMLDivElement>(null);
+
   return (
-    <DatePickerContainer>
+    <DatePickerContainer ref={datePickerContainerRef}>
       <DatePicker
         selected={value}
         placeholderText="dd/mm/yyyy"
@@ -32,6 +35,12 @@ export const DatePickerInput = ({ value, onChange }: Props) => {
             </CalendarContainer>
           </div>
         )}
+        onFocus={() =>
+          datePickerContainerRef.current?.classList.add("outlined")
+        }
+        onBlur={() =>
+          datePickerContainerRef.current?.classList.remove("outlined")
+        }
       />
     </DatePickerContainer>
   );
@@ -43,6 +52,10 @@ const DatePickerContainer = styled.div`
   border: 1px solid ${Colors.primary.grayLight};
   border-radius: 5px;
   padding: 10px 12px;
+
+  & .react-datepicker-wrapper {
+    width: 100px;
+  }
 
   & .date_picker {
     border: none;
@@ -59,5 +72,9 @@ const DatePickerContainer = styled.div`
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
+  }
+
+  &.outlined {
+    outline: 2px solid black;
   }
 `;
