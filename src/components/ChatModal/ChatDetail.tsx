@@ -119,13 +119,7 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
         </Participant>
         <IconButton icon="close" size="sm" />
       </ChatHeader>
-      <ChatContent
-        ref={chatContentRef}
-        onScroll={handleScroll}
-        $paddingBottom={
-          replayRef.current ? `${replayRef.current.clientHeight + 12}px` : ""
-        }
-      >
+      <ChatContent ref={chatContentRef} onScroll={handleScroll}>
         {data?.chats.map((item, i) => {
           return (
             <React.Fragment key={i}>
