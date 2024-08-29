@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 
 import { FontSize, FontWeight } from "../../helpers/types";
