@@ -22,27 +22,21 @@ const TextArea = styled.textarea`
   resize: none;
   border-radius: 5px;
   color: ${Colors.primary.grayDark};
+  padding: 0;
+  transition: 0.1s ease;
+  outline: none;
 
   &:placeholder-shown {
     cursor: pointer;
     position: relative;
-    padding: 0;
     width: 110px;
     height: 40px;
-    border: 0;
-    outline: none;
-  }
-
-  &::placeholder {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    border: none;
   }
 
   &:not(:placeholder-shown) {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid ${Colors.primary.grayLight};
+    border: none;
   }
 
   &:focus {
@@ -53,7 +47,7 @@ const TextArea = styled.textarea`
     border: 1px solid ${Colors.primary.grayLight};
   }
 
-  &:focus::placeholder {
+  &:focus:placeholder-shown {
     position: static;
     transform: none;
   }

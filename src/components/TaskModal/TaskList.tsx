@@ -77,19 +77,30 @@ export const TaskList = () => {
     setData(newTask);
   };
 
-  const handleChangeTask = ({
+  const handleChangeDate = ({
     date,
-    desc,
     task,
   }: {
     date?: Date | null;
-    desc?: string | null;
     task: TaskType;
   }) => {
     const newTask = {
       ...task,
       date: date || null,
-      desc,
+    };
+    updateData(newTask);
+  };
+
+  const handleChangeDesc = ({
+    desc,
+    task,
+  }: {
+    desc?: string;
+    task: TaskType;
+  }) => {
+    const newTask = {
+      ...task,
+      desc: desc || "",
     };
     updateData(newTask);
   };
@@ -187,15 +198,19 @@ export const TaskList = () => {
                     />
                     <DatePickerInput
                       value={task.date}
-                      onChange={(date) => handleChangeTask({ date, task })}
+                      onChange={(date) => handleChangeDate({ date, task })}
                     />
                   </ContentItem>
-                  <ContentItem $isFilled={Boolean(task.desc)}>
+                  <ContentItem
+                    $isFilled={Boolean(task.desc)}
+                    style={{ alignItems: "flex-start" }}
+                  >
                     <Icon
                       name="pencil"
                       style={{
                         height: "15px",
                         width: "15px",
+                        marginTop: "5px",
                         marginRight: "5px",
                       }}
                       className="task_icon"
@@ -205,7 +220,7 @@ export const TaskList = () => {
                       placeholder="No Description"
                       value={task.desc || ""}
                       onChange={(e) => {
-                        handleChangeTask({ task, desc: e.target.value });
+                        handleChangeDesc({ task, desc: e.target.value });
                       }}
                     />
                   </ContentItem>
