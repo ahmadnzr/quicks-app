@@ -18,6 +18,7 @@ import { IconButton } from "../IconButton";
 import { DatePickerInput } from "../DatePicker";
 import { CheckTask } from "../CheckTask";
 import { TaskDesc } from "../TaskDesc";
+import { TaskTitle } from "../TaskTitle";
 
 const menus: MenuType[] = [
   {
@@ -105,6 +106,20 @@ export const TaskList = () => {
     updateData(newTask);
   };
 
+  const handleChangeTitle = ({
+    title,
+    task,
+  }: {
+    title?: string;
+    task: TaskType;
+  }) => {
+    const newTask: TaskType = {
+      ...task,
+      title: title || "",
+    };
+    updateData(newTask);
+  };
+
   useEffect(() => {
     getData();
   }, []);
@@ -135,12 +150,20 @@ export const TaskList = () => {
             {data.map((task) => (
               <TaskCard key={task.id}>
                 <CardHeader>
-                  <CheckTask
-                    className="task_check"
-                    label={task.title}
-                    checked={task.done}
-                    onCheck={(e) => handleCheck(e, task)}
-                  />
+                  <CheckTitle>
+                    <CheckTask
+                      className="task_check"
+                      checked={task.done}
+                      onCheck={(e) => handleCheck(e, task)}
+                    />
+                    <TaskTitle
+                      done={task.done}
+                      value={task.title}
+                      onChange={(e) =>
+                        handleChangeTitle({ task, title: e.target.value })
+                      }
+                    />
+                  </CheckTitle>
                   <Detail>
                     {!task.done && (
                       <Text size="sm" color={Colors.primary.red}>
@@ -348,4 +371,8 @@ const ContentItem = styled.div<{ $isFilled?: boolean }>`
   & .task_icon {
     filter: ${(props) => (props.$isFilled ? Colors.filter.blue : "none")};
   }
+`;
+
+const CheckTitle = styled.div`
+  display: flex;
 `;
