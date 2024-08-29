@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { FontWeight } from "../../helpers/types";
 import { Text } from "../Text";
+import { useState } from "react";
 
 export interface MenuType<T = number> {
   key: T;
@@ -29,8 +30,15 @@ export const ActionMenuButton = <T = number,>({
   menus = [],
   customWidth,
 }: ActionMenuProps<T>) => {
+  const [open, setOpen] = useState(false);
+
   const handleClickMenu = (menu: MenuType<T>) => {
+    setOpen(false);
     onClickMenu(menu);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
   };
 
   return (
@@ -39,6 +47,8 @@ export const ActionMenuButton = <T = number,>({
       placement={placement}
       title=""
       arrow={false}
+      open={open}
+      onOpenChange={handleOpenChange}
       content={
         <ActionMenuButtonStyled className={className} $width={customWidth}>
           {menus.map((item, i) => (

@@ -354,7 +354,7 @@ const Replay = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 49px;
+  bottom: 47px;
   background-color: ${Colors.primary.light};
   z-index: 999;
   border-radius: 10px 10px 0 0;
