@@ -78,6 +78,7 @@ function App() {
         </TriggerButtonContainer>
 
         <ChatModal
+          onCloseModal={handleReset}
           targetRef={btnMenuRefs.trigger}
           isOpen={activeBtn === "chat"}
         />

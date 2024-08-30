@@ -12,6 +12,7 @@ import { ChatItemType, DetailChatListType } from "../../helpers/types";
 import { getDetailChat } from "../../helpers/api";
 
 interface Props {
+  onClose: () => void;
   onBack: () => void;
   chatId?: number;
 }
@@ -42,7 +43,7 @@ const otherMenu: MenuType<"SHARE" | "REPLAY">[] = [
   },
 ];
 
-export const ChatDetail = ({ onBack, chatId }: Props) => {
+export const ChatDetail = ({ onClose, onBack, chatId }: Props) => {
   const tagRef = useRef<HTMLDivElement>(null);
   const replayRef = useRef<HTMLDivElement>(null);
   const chatContentRef = useRef<HTMLDivElement>(null);
@@ -117,7 +118,7 @@ export const ChatDetail = ({ onBack, chatId }: Props) => {
             <Text size="sm">{data.numberParticipant} Participants</Text>
           ) : null}
         </Participant>
-        <IconButton icon="close" size="sm" />
+        <IconButton onClick={onClose} icon="close" size="sm" />
       </ChatHeader>
       <ChatContent ref={chatContentRef} onScroll={handleScroll}>
         {data?.chats.map((item, i) => {

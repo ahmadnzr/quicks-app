@@ -4,11 +4,14 @@ import { Modal } from "../Modal";
 import { ChatList } from "./ChatList";
 import { ChatDetail } from "./ChatDetail";
 
-type ModalType = Required<
-  Pick<React.ComponentProps<typeof Modal>, "targetRef" | "isOpen">
->;
+interface ModalType
+  extends Required<
+    Pick<React.ComponentProps<typeof Modal>, "targetRef" | "isOpen">
+  > {
+  onCloseModal: () => void;
+}
 
-export const ChatModal = ({ targetRef, isOpen }: ModalType) => {
+export const ChatModal = ({ onCloseModal, targetRef, isOpen }: ModalType) => {
   const [step, setStep] = useState<"list" | "detail">("detail");
   const [chatId, setChatId] = useState<number | undefined>(undefined);
 
@@ -21,6 +24,7 @@ export const ChatModal = ({ targetRef, isOpen }: ModalType) => {
     list: <ChatList onClick={handleClikChat} />,
     detail: (
       <ChatDetail
+        onClose={onCloseModal}
         chatId={chatId}
         onBack={() => {
           setStep("list");
